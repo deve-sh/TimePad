@@ -33,3 +33,8 @@ const generateTimePadItem = (time, value, cursor, selection) => {
 	};
 	return newItem;
 };
+
+const resetRecording = () => {
+	// Resets the entire window.timePadRecording array.
+	return (window.timePadRecording = null);
+};
