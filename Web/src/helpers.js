@@ -22,24 +22,35 @@ const helpers = {
 
 		return window.timePadRecording;
 	},
-	setTimeSoFar: function(timeGap = defaultOptions.timeGap){
-		if(!timeGap || Number(timeGap) === 0 || typeof timeGap !== 'number')
+	setTimeSoFar: function(timeGap = defaultOptions.timeGap) {
+		if (!timeGap || Number(timeGap) === 0 || typeof timeGap !== "number")
 			return false;
-		if(!window.timeSoFar) window.timeSoFar = timeGap;
+		if (!window.timeSoFar) window.timeSoFar = timeGap;
 		else window.timeSoFar += timeGap;
 
 		return window.timeSoFar;
 	},
-	toggleTimeInterval: function(timeGap = defaultOptions.timeGap){
-		if(window.timePadTimer)
-			setInterval(this.setTimeSoFar(timeGap), timeGap);
-		else window.timePadTimer = clearInterval(window.timePadTimer);
+	toggleTimeInterval: function(
+		timeGap = defaultOptions.timeGap,
+		stopRecording = false
+	) {
+		if (stopRecording)
+			window.timePadTimer = clearInterval(window.timePadTimer);
+		else {
+			if (!window.timePadTimer) {
+				window.timePadTimer = setInterval(
+					helpers.setTimeSoFar(timeGap),
+					timeGap
+				);
+			} else window.timePadTimer = clearInterval(window.timePadTimer);
+		}
+		return window.timePadTimer;
 	},
-	startRecording: function(){
-
-	},
-	stopRecording: function(){
-
+	toggleRecording: function(timeGap = defaultOptions.timeGap) {
+		if (window.timePadIsRecording) window.timePadIsRecording = false;
+		else window.timePadIsRecording = true;
+		helpers.toggleTimeInterval(timeGap); // Toggle the incrementer.
+		return window.timePadIsRecording;
 	},
 	generateTimePadItem: (value, cursor, selection) => {
 		// Function to generate new timePadRecording item.
@@ -61,6 +72,13 @@ const helpers = {
 			selection
 		};
 		return newItem;
+	},
+	stopRecording: (callback = recording => recording) => {
+		if (!window.timePadIsRecording) return window.timePadIsRecording;
+
+		window.timePadIsRecording = false;
+		helpers.toggleTimeInterval(null, true); // Remove the timer entirely.
+		return callback(window.timePadRecording); // Return the recording
 	},
 	resetRecording: () => {
 		// Resets the entire window.timePadRecording array.

@@ -3,7 +3,9 @@ const {
 	setRecordingSoFar,
 	generateTimePadItem,
 	resetRecording,
-	setTimeSoFar
+	setTimeSoFar,
+	toggleRecording,
+	stopRecording
 } = require("../src/helpers");
 
 const defaultOptions = require("../src/defaultOptions");
@@ -36,7 +38,7 @@ test("testing generateTimePadItem", () => {
 test("testing resetRecording and functionality after that.", () => {
 	expect(resetRecording()).toBe(null);
 	let itemToAdd = generateTimePadItem("Hey", 2, [1, 2]);
-	
+
 	expect(itemToAdd).toStrictEqual({
 		id: 1,
 		time: 0,
@@ -51,4 +53,20 @@ test("testing resetRecording and functionality after that.", () => {
 test("testing setTimeSoFar", () => {
 	expect(setTimeSoFar()).toBe(defaultOptions.timeGap);
 	expect(setTimeSoFar(null)).toBe(false);
+});
+
+test("testing toggleRecording and stopRecording", () => {
+	expect(toggleRecording()).toBe(true);
+	expect(toggleRecording()).toBe(false);
+	expect(stopRecording()).toBe(false);
+	toggleRecording();
+	expect(stopRecording(recording => recording)).toStrictEqual([
+		{
+			id: 1,
+			time: 0,
+			value: "Hey",
+			cursor: 2,
+			selection: [1, 2]
+		}
+	]); // One from the previous test.
 });

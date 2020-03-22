@@ -13,7 +13,7 @@ let mockElement = tagName => {
 	};
 };
 
-it("show return null when a non-editable node is passed (Not a textarea or an input field)", () => {
+it("should return null when a non-editable node is passed (Not a textarea or an input field)", () => {
 	expect(TimePad(mockElement("textarea"))).not.toBe(null);
 	expect(TimePad(mockElement("TextArea"))).not.toBe(null);
 	expect(TimePad(mockElement("input"))).not.toBe(null);

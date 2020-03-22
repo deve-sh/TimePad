@@ -17,15 +17,23 @@ const {
 
 const defaultOptions = require("./defaultOptions");
 
-function TimePad(node, options = defaultOptions) {
+function TimePad(
+	node,
+	options = defaultOptions,
+	afterRecordingCallback = recording => recording
+) {
 	/*
 		Underlying algorithm : 
 		1. Get the node to track.
 		2. Add an event listener to that node if is a textarea or editable field.
 	*/
-	if (node && typeof options === "object" && options !== null) {
+	if (
+		node &&
+		typeof options === "object" &&
+		options !== null &&
+		typeof afterRecordingCallback === "function"
+	) {
 		let timePadNode = node;
-		let isRecording = false;
 		let optionsForNode = {
 			...defaultOptions,
 			...options
@@ -39,7 +47,7 @@ function TimePad(node, options = defaultOptions) {
 
 			// The event listeners to listen to the keystrokes and the clicks on the textarea/inputs.
 
-			const eventListener = event => {
+			const keyEventListener = event => {
 				let eventNode = timePadNode;
 
 				if (eventNode) {
@@ -58,10 +66,7 @@ function TimePad(node, options = defaultOptions) {
 				} else return null;
 			};
 
-			// Other functions to start, stop and pause their recordings.
-			const toggleRecording = (optionsForNode.timeGap) => {
-				// Do something.
-			};
+			// Other functionality to start, stop and pause their recordings.
 
 			// Function to increment the value of the current time in window object.
 			toggleTimeInterval(optionsForNode.timeGap);
@@ -70,9 +75,11 @@ function TimePad(node, options = defaultOptions) {
 			// const cursorEventListener = (event) => {
 			// 	let eventNode = timePadNode;
 			// }
-
-			timePadNode.addEventListener("keyup", eventListener);
 			// timePadNode.addEventListener("click", eventListener);
+
+			timePadNode.addEventListener("keyup", keyEventListener);
+
+			// Creating a controller for the recording.
 
 			return true;
 		} else return null;
