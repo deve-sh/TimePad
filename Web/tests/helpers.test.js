@@ -2,8 +2,11 @@ const {
 	fetchRecordingSoFar,
 	setRecordingSoFar,
 	generateTimePadItem,
-	resetRecording
-} = require("../helpers");
+	resetRecording,
+	setTimeSoFar
+} = require("../src/helpers");
+
+const defaultOptions = require("../src/defaultOptions");
 
 test("fetchRecordingSoFar should return an empty array in the absense of the window object.", () => {
 	expect(JSON.stringify(fetchRecordingSoFar())).toBe("[]");
@@ -32,14 +35,20 @@ test("testing generateTimePadItem", () => {
 
 test("testing resetRecording and functionality after that.", () => {
 	expect(resetRecording()).toBe(null);
-	let itemToAdd = generateTimePadItem(1000, "Hey", 2, [1, 2]);
+	let itemToAdd = generateTimePadItem("Hey", 2, [1, 2]);
+	
 	expect(itemToAdd).toStrictEqual({
 		id: 1,
-		time: 1000,
+		time: 0,
 		value: "Hey",
 		cursor: 2,
 		selection: [1, 2]
 	});
 
 	expect(setRecordingSoFar(itemToAdd)).toStrictEqual([itemToAdd]);
+});
+
+test("testing setTimeSoFar", () => {
+	expect(setTimeSoFar()).toBe(defaultOptions.timeGap);
+	expect(setTimeSoFar(null)).toBe(false);
 });
