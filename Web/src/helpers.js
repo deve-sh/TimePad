@@ -1,6 +1,15 @@
 const defaultOptions = require("./defaultOptions");
 
 const helpers = {
+	verifyNode: node => {
+		if (
+			!node ||
+			(node.tagName !== "textarea".toUpperCase() &&
+				node.tagName !== "input".toUpperCase())
+		)
+			return false;
+		return true;
+	},
 	getCursor: textarea => {
 		if (textarea) return textarea.selectionStart;
 		else return 0;
@@ -60,7 +69,8 @@ const helpers = {
 		</div>`;
 
 		try {
-			if ((timePadNode.outerHTML += controlHTML)) {
+			let newHTML = timePadNode.outerHTML + controlHTML
+			if (timePadNode.outerHTML = newHTML) {
 				// Now adding the event listeners to the buttons.
 				if (
 					document
@@ -79,8 +89,11 @@ const helpers = {
 							helpers.stopRecording(afterStopCallback)
 						)
 				)
-					return true;
-				else throw Error("Could not attach event listeners to the buttons.");
+					return timePadNode;
+				else
+					throw Error(
+						"Could not attach event listeners to the buttons."
+					);
 			} else throw Error("Could not append controls to DOM Node.");
 		} catch (err) {
 			return err.toString();
@@ -120,6 +133,8 @@ const helpers = {
 				helpers.keyEventListener
 			);
 		}
+
+		return timePadNode;
 	},
 	toggleTimeInterval: function(stopRecording = false) {
 		if (stopRecording)

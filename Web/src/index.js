@@ -4,6 +4,7 @@
 */
 
 const {
+	verifyNode,
 	fetchRecordingSoFar,
 	setRecordingSoFar,
 	generateTimePadItem,
@@ -41,10 +42,7 @@ function TimePad(
 			...options
 		};
 
-		if (
-			timePadNode.tagName === "textarea".toUpperCase() ||
-			timePadNode.tagName === "input".toUpperCase() // Add more types here as needed.
-		) {
+		if (verifyNode(timePadNode)) {
 			// contentEditable not exactly supported right now, since the value of the input/textarea is used instead of innerHTML.
 
 			// Function to increment the value of the current time in window object.
@@ -56,9 +54,10 @@ function TimePad(
 			// }
 			// timePadNode.addEventListener("click", clickEventListener);
 
-			if (optionsForNode.showController)
+			if (optionsForNode.showController) {
+				// Injecting the controls for the textbox.
 				injectControls(timePadNode, optionsForNode.controllerClass);
-			toggleEventListeners(timePadNode);	// Attaching the event listeners.
+			}
 
 			// Creating a controller for the recording.
 
