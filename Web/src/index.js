@@ -3,8 +3,6 @@
 	Including keystrokes, selections and cursors.
 */
 
-module.exports = { TimePad };
-
 const {
 	fetchRecordingSoFar,
 	setRecordingSoFar,
@@ -12,7 +10,9 @@ const {
 	resetRecording,
 	getCursor,
 	getSelection,
-	toggleTimeInterval
+	toggleTimeInterval,
+	attachEventListeners,
+	injectControls
 } = require("./helpers");
 
 const defaultOptions = require("./defaultOptions");
@@ -77,7 +77,9 @@ function TimePad(
 			// }
 			// timePadNode.addEventListener("click", eventListener);
 
-			timePadNode.addEventListener("keyup", keyEventListener);
+			if (optionsForNode.showController)
+				injectControls(timePadNode, optionsForNode.controllerClass);
+			attachEventListeners(timePadNode);
 
 			// Creating a controller for the recording.
 
@@ -85,3 +87,5 @@ function TimePad(
 		} else return null;
 	} else return null;
 }
+
+module.exports = TimePad;

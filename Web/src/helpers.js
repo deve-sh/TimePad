@@ -30,6 +30,37 @@ const helpers = {
 
 		return window.timeSoFar;
 	},
+	injectControls: (
+		timePadNode = null,
+		controllerClassName = defaultOptions.controllerClass
+	) => {
+		if (!timePadNode || document.getElementById("timePadControls")) {
+			// Controls already set or no timePadNode.
+			return false;
+		}
+
+		if (!controllerClassName)
+			controllerClassName = defaultOptions.controllerClass;
+		else if(controllerClassName.indexOf(defaultOptions.controllerClass) === -1)
+			controllerClassName += defaultOptions.controllerClass;
+
+		let baseClassName = defaultOptions.controllerClass;
+
+		let controlHTML = `<div class='${controllerClassName}'>
+			<button class='${baseClassName}-controlbutton play'>Play</button>
+			<button class='${baseClassName}-controlbutton pause'>Pause</button>
+			<button class='${baseClassName}-controlbutton stop'>Stop</button>
+		</div>`;
+
+		try{
+			if(timePadNode.outerHTML += controlHTML)
+				return true;
+			else throw Error("Could not append controls to DOM Node.");
+		}
+		catch(err){
+			return err.toString();
+		}
+	},
 	toggleTimeInterval: function(
 		timeGap = defaultOptions.timeGap,
 		stopRecording = false
