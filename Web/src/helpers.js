@@ -32,16 +32,23 @@ const helpers = {
 	},
 	injectControls: (
 		timePadNode = null,
-		controllerClassName = defaultOptions.controllerClass
+		controllerClassName = defaultOptions.controllerClass,
+		afterStopCallback
 	) => {
-		if (!timePadNode || document.getElementById("timePadControls")) {
+		if (
+			!timePadNode ||
+			document.getElementById("timePadControls") ||
+			typeof afterStopCallback !== "function"
+		) {
 			// Controls already set or no timePadNode.
 			return false;
 		}
 
 		if (!controllerClassName)
 			controllerClassName = defaultOptions.controllerClass;
-		else if(controllerClassName.indexOf(defaultOptions.controllerClass) === -1)
+		else if (
+			controllerClassName.indexOf(defaultOptions.controllerClass) === -1
+		)
 			controllerClassName += defaultOptions.controllerClass;
 
 		let baseClassName = defaultOptions.controllerClass;
@@ -52,35 +59,90 @@ const helpers = {
 			<button class='${baseClassName}-controlbutton stop'>Stop</button>
 		</div>`;
 
-		try{
-			if(timePadNode.outerHTML += controlHTML)
-				return true;
-			else throw Error("Could not append controls to DOM Node.");
-		}
-		catch(err){
+		try {
+			if ((timePadNode.outerHTML += controlHTML)) {
+				// Now adding the event listeners to the buttons.
+				if (
+					document
+						.querySelector(`.${baseClassName}-controlbutton.play`)
+						.addEventListener("click", () =>
+							helpers.toggleRecording(timePadNode)
+						) &&
+					document
+						.querySelector(`.${baseClassName}-controlbutton.pause`)
+						.addEventListener("click", () =>
+							helpers.toggleRecording(timePadNode)
+						) &&
+					document
+						.querySelector(`.${baseClassName}-controlbutton.stop`)
+						.addEventListener("click", () =>
+							helpers.stopRecording(afterStopCallback)
+						)
+				)
+					return true;
+				else throw Error("Could not attach event listeners to the buttons.");
+			} else throw Error("Could not append controls to DOM Node.");
+		} catch (err) {
 			return err.toString();
 		}
 	},
-	toggleTimeInterval: function(
-		timeGap = defaultOptions.timeGap,
-		stopRecording = false
-	) {
+	keyEventListener: event => {
+		let eventNode = event.target;
+
+		if (eventNode) {
+			let nodeValue = eventNode.value,
+				nodeCursor = getCursor(eventNode),
+				nodeSelection = getSelection(eventNode);
+
+			// Setting the recording in the window so far.
+			helpers.setRecordingSoFar(
+				helpers.generateTimePadItem(
+					nodeValue,
+					nodeCursor,
+					nodeSelection
+				)
+			);
+		} else return null;
+	},
+	clickEventListener: event => {
+		// Coming soon, or probably never. I don't know. :P
+		return null;
+	},
+	toggleEventListeners: function(timePadNode = null) {
+		if (!timePadNode) return false;
+
+		if (!window.timePadIsRecording)
+			timePadNode.addEventListener("keypress", helpers.keyEventListener);
+		else {
+			// Detach if TimePad is recording right now.
+			timePadNode.removeEventListener(
+				"keypress",
+				helpers.keyEventListener
+			);
+		}
+	},
+	toggleTimeInterval: function(stopRecording = false) {
 		if (stopRecording)
 			window.timePadTimer = clearInterval(window.timePadTimer);
 		else {
 			if (!window.timePadTimer) {
 				window.timePadTimer = setInterval(
-					helpers.setTimeSoFar(timeGap),
-					timeGap
+					helpers.setTimeSoFar(defaultOptions.timeGap),
+					defaultOptions.timeGap
 				);
 			} else window.timePadTimer = clearInterval(window.timePadTimer);
 		}
 		return window.timePadTimer;
 	},
-	toggleRecording: function(timeGap = defaultOptions.timeGap) {
+	toggleRecording: function(timePadNode = null) {
+		if (!timePadNode) return null;
+
 		if (window.timePadIsRecording) window.timePadIsRecording = false;
 		else window.timePadIsRecording = true;
 		helpers.toggleTimeInterval(timeGap); // Toggle the incrementer.
+
+		// Attach/detach the event listeners from the timeNode.
+		helpers.toggleEventListeners(timePadNode);
 		return window.timePadIsRecording;
 	},
 	generateTimePadItem: (value, cursor, selection) => {

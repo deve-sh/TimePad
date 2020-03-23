@@ -11,8 +11,10 @@ const {
 	getCursor,
 	getSelection,
 	toggleTimeInterval,
-	attachEventListeners,
-	injectControls
+	toggleEventListeners,
+	injectControls,
+	keyEventListener,
+	clickEventListener
 } = require("./helpers");
 
 const defaultOptions = require("./defaultOptions");
@@ -45,29 +47,6 @@ function TimePad(
 		) {
 			// contentEditable not exactly supported right now, since the value of the input/textarea is used instead of innerHTML.
 
-			// The event listeners to listen to the keystrokes and the clicks on the textarea/inputs.
-
-			const keyEventListener = event => {
-				let eventNode = timePadNode;
-
-				if (eventNode) {
-					let nodeValue = eventNode.value,
-						nodeCursor = getCursor(eventNode),
-						nodeSelection = getSelection(eventNode);
-
-					// Setting the recording in the window so far.
-					setRecordingSoFar(
-						generateTimePadItem(
-							nodeValue,
-							nodeCursor,
-							nodeSelection
-						)
-					);
-				} else return null;
-			};
-
-			// Other functionality to start, stop and pause their recordings.
-
 			// Function to increment the value of the current time in window object.
 			toggleTimeInterval(optionsForNode.timeGap);
 
@@ -75,11 +54,11 @@ function TimePad(
 			// const cursorEventListener = (event) => {
 			// 	let eventNode = timePadNode;
 			// }
-			// timePadNode.addEventListener("click", eventListener);
+			// timePadNode.addEventListener("click", clickEventListener);
 
 			if (optionsForNode.showController)
 				injectControls(timePadNode, optionsForNode.controllerClass);
-			attachEventListeners(timePadNode);
+			toggleEventListeners(timePadNode);	// Attaching the event listeners.
 
 			// Creating a controller for the recording.
 

@@ -2,7 +2,6 @@
 const defaultOptions = {
 	timeGap: 50,	// Time between each iteration in milliseconds
 	showController: true,
-	loop: false,
 	controllerClass: "timepad-controller"	// The class name to assign to the controller below the textarea.
 };
 
