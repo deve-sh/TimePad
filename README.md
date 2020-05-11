@@ -80,7 +80,7 @@ Optional step:
 }
 ```
 
-    	As a result you would be storing a string of less length in case you decide to follow the following step.
+As a result you would be storing a string of less length in case you decide to follow the following step.
 
     - You could also choose to store a Stringified version of `recordedChanges` in order to reduce the memory when stored on the server and parse it as objects once received by the frontend.
 
