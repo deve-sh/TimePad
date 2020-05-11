@@ -71,25 +71,25 @@ Optional step:
     - Use `null` values in case there isn't a selection, instead of storing the entire selection objects.
     - Reduce the length of the keys used to store the data in the objects, for example:
 
-```
-{
-	ti: currentTime,
-	t: text,
-	c: cursor,
-	s: selection
-}
-```
+	```
+	{
+		ti: currentTime,
+		t: text,
+		c: cursor,
+		s: selection
+	}
+	```
 
-As a result you would be storing a string of less length in case you decide to follow the following step.
+	As a result you would be storing a string of less length in case you decide to follow the following step.
 
     - You could also choose to store a Stringified version of `recordedChanges` in order to reduce the memory when stored on the server and parse it as objects once received by the frontend.
 
-```javascript
-// While storing in the backend
-let dataToSend = JSON.stringify(window.recordedChanges);
-// While using the same recording received from the backend.
-let dataToReplay = JSON.parse(receivedStringArray);
-```
+	```javascript
+	// While storing in the backend
+	let dataToSend = JSON.stringify(window.recordedChanges);
+	// While using the same recording received from the backend.
+	let dataToReplay = JSON.parse(receivedStringArray);
+	```
 
 #### Replaying
 
