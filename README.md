@@ -71,12 +71,12 @@ Optional step:
     - Use `null` values in case there isn't a selection, instead of storing the entire selection objects.
     - Reduce the length of the keys used to store the data in the objects, for example:
 
-```json
+```
 {
-	"ti": currentTime,
-	"t": text,
-	"c": cursor,
-	"s": selection
+	ti: currentTime,
+	t: text,
+	c: cursor,
+	s: selection
 }
 ```
 
