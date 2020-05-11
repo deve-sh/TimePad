@@ -1,0 +1,50 @@
+:root {
+	--green: #28a745;
+	--red: #dc3545;
+	--teal: #20c997;
+	--orange: #fd7e14;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 1rem;
+}
+
+.codemirror {
+	width: 100%;
+	min-height: 13.5rem;
+	max-height: 20rem;
+	border-radius: 0.35rem;
+}
+
+button.success,
+button.danger,
+button.info,
+button.warn {
+	background: var(--green);
+	color: white;
+	border: none;
+	border-radius: 0.15rem;
+	padding: 0.5rem;
+}
+
+button.danger {
+	background: var(--red);
+}
+
+button.info {
+	background: var(--teal);
+}
+
+button.warn {
+	background: var(--orange);
+}
+
+h2 {
+	margin-top: 0;
+	padding-top: 0;
+}

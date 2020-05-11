@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TimePad</title>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" />
+		<script type="text/javascript" src="js/globals.js"></script>
+		<script type="text/javascript" src="js/scripts.js"></script>
+	</head>
+	<body>
+		<h2>TimePad Simple Implementation</h2>
+		<textarea id="inputtextarea" class="codemirror" placeholder="Press Start and Type something in."></textarea>
+		<!-- Controls -->
+		<br />
+		<button
+			onclick="initTimer('#inputtextarea', trackChange)"
+			class="success"
+		>
+			Start
+		</button>
+		<button onclick="pauseTimer(trackChange)" class="warn">Pause</button>
+		<button onclick="resumeTimer(trackChange)" class="info">Resume</button>
+		<button onclick="stopTimer(trackChange)" class="danger">Stop</button>
+		<br /><br />
+		<textarea id="outputtextarea" class="codemirror" placeholder="Type something above, press stop and press Replay."></textarea>
+		<br />
+		<button
+			onclick="replayChanges('#outputtextarea', applyChanges)"
+			class="success"
+		>
+			Replay
+		</button>
+		<button onclick="pauseReplay(applyChanges)" class="warn">Pause</button>
+		<button onclick="resumeReplay(applyChanges)" class="info">Resume</button>
+		<button onclick="stopReplay()" class="danger">Stop Replay</button>
+
+		<script type="text/javascript" src="js/helpers.js"></script>
+	</body>
+</html>
