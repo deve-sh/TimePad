@@ -6,6 +6,16 @@ TimePad is a basic recordable and replayable textarea (More of an algorithm for 
 
 A basic example of the implementation of Timepad is provided at [this place](https://deve-sh.github.io/TimePad), one could use the [following algorithm](#basic-algorithm-for-replication) to replicate TimePad in any environment and any language that can use something like this.
 
+---
+
+## Before you proceed: There are some updates to the algorithm
+
+I noticed since I last published a doc about this algorithm that there were things I could improve on for efficiency and speed.
+
+Once you're done reading the algorithm, head on over to the [Improvements](#algorithm-improvements) section.
+
+---
+
 ## Basic Algorithm for replication
 
 Timepad can be replicated in the environment of your choice with the following algorithms:
@@ -38,7 +48,7 @@ function incrementTime(fps) {
 // Attaching the above function to an interval.
 window.fps = 30;
 
-window.timer = window.setInterval(function() {
+window.timer = window.setInterval(function () {
 	incrementTime(window.fps);
 }, window.fps);
 
@@ -67,29 +77,30 @@ function addTowindow.recordedChanges(text, cursor, selection){
 Optional step:
 
 9. In the question of scale, it's already a very efficient solution since it is much smaller in comparison to video recording a textarea in the first place. However, if you are still worried. Here are some solutions:
-    - Have the recording streamed instead of being thrown to the client or server all at once. Especially in case of long recordings that can have a lot of text in them.
-    - Use `null` values in case there isn't a selection, instead of storing the entire selection objects.
-    - Reduce the length of the keys used to store the data in the objects, for example:
 
-	```
-	{
-		ti: currentTime,
-		t: text,
-		c: cursor,
-		s: selection
-	}
-	```
+   - Have the recording streamed instead of being thrown to the client or server all at once. Especially in case of long recordings that can have a lot of text in them.
+   - Use `null` values in case there isn't a selection, instead of storing the entire selection objects.
+   - Reduce the length of the keys used to store the data in the objects, for example:
 
-	As a result you would be storing a string of less length in case you decide to follow the following step.
+   ```
+   {
+   	ti: currentTime,
+   	t: text,
+   	c: cursor,
+   	s: selection
+   }
+   ```
 
-    - You could also choose to store a Stringified version of `recordedChanges` in order to reduce the memory when stored on the server and parse it as objects once received by the frontend.
+   As a result you would be storing a string of less length in case you decide to follow the following step.
 
-	```javascript
-	// While storing in the backend
-	let dataToSend = JSON.stringify(window.recordedChanges);
-	// While using the same recording received from the backend.
-	let dataToReplay = JSON.parse(receivedStringArray);
-	```
+   - You could also choose to store a Stringified version of `recordedChanges` in order to reduce the memory when stored on the server and parse it as objects once received by the frontend.
+
+   ```javascript
+   // While storing in the backend
+   let dataToSend = JSON.stringify(window.recordedChanges);
+   // While using the same recording received from the backend.
+   let dataToReplay = JSON.parse(receivedStringArray);
+   ```
 
 #### Replaying
 
@@ -141,6 +152,12 @@ The code that is used for the implementation isn't exactly something you would p
 ## Building stuff with TimePad
 
 I am pretty sure this is not the only algo like this out there, for sure. However, if you choose to use this in any of your services, projects or projects. Do let me know at [my email](mailto:devesh2027@gmail.com). I would be more than pleased to know.
+
+## Algorithm Improvements
+
+- Unlike the initial version (below), we will not be storing the entire text from a textarea at a point in time, and instead store diffs between them at any given changepoint.
+
+- We can remove our reliance on `setInterval` at recording time and instead use `events` to track changes, selections and cursor movements and add it to a change stack. Round off the time to the closest
 
 ## Issues and Improvements
 
